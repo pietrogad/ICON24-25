@@ -45,7 +45,7 @@ def applica_kmeans_e_aggiungi_feature(X_originale, X_processato, k, stato_casual
     try:
         X_processato_con_cluster = preprocessore_esteso.fit_transform(X_con_cluster)
 
-        # Ottieni nomi aggiornati
+        #nomi aggiornati
         nuovi_nomi_ohe = preprocessore_esteso.named_transformers_['cat'].get_feature_names_out(feature_categoriche_ohe_estese)
         colonne_rimanenti = [col for col in X_con_cluster.columns if col not in FEATURE_NUMERICHE and col not in feature_categoriche_ohe_estese]
         nomi_feature_estese = FEATURE_NUMERICHE + list(nuovi_nomi_ohe) + colonne_rimanenti
@@ -58,4 +58,5 @@ def applica_kmeans_e_aggiungi_feature(X_originale, X_processato, k, stato_casual
         return X_processato_con_cluster, preprocessore_esteso, nomi_feature_estese
     except Exception as e:
         print(f"errore durante ri-preprocessing con cluster: {e}")
+
         return None, None, None
