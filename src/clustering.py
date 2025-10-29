@@ -30,7 +30,8 @@ def applica_kmeans_e_aggiungi_feature(X_originale, X_processato, k, stato_casual
     etichette_cluster = kmeans.fit_predict(X_processato)
 
     X_con_cluster = X_originale.copy()
-    X_con_cluster['cluster'] = etichette_cluster.astype(str)
+    X_con_cluster['cluster'] = etichette_cluster
+    X_con_cluster['cluster'] = X_con_cluster['cluster'].astype(str)
 
     feature_categoriche_ohe_estese = FEATURE_CATEGORICHE_OHE + ['cluster']
 
@@ -44,8 +45,6 @@ def applica_kmeans_e_aggiungi_feature(X_originale, X_processato, k, stato_casual
 
     try:
         X_processato_con_cluster = preprocessore_esteso.fit_transform(X_con_cluster)
-
-        #nomi aggiornati
         nuovi_nomi_ohe = preprocessore_esteso.named_transformers_['cat'].get_feature_names_out(feature_categoriche_ohe_estese)
         colonne_rimanenti = [col for col in X_con_cluster.columns if col not in FEATURE_NUMERICHE and col not in feature_categoriche_ohe_estese]
         nomi_feature_estese = FEATURE_NUMERICHE + list(nuovi_nomi_ohe) + colonne_rimanenti
@@ -55,8 +54,7 @@ def applica_kmeans_e_aggiungi_feature(X_originale, X_processato, k, stato_casual
         if len(nomi_feature_estese) != X_processato_con_cluster.shape[1]:
              print(f"discrepanza nomi feature ({len(nomi_feature_estese)}) e colonne ({X_processato_con_cluster.shape[1]}) in clustering")
 
-        return X_processato_con_cluster, preprocessore_esteso, nomi_feature_estese
+        return X_processato_con_cluster, preprocessore_esteso, nomi_feature_estese, etichette_cluster
     except Exception as e:
         print(f"errore durante ri-preprocessing con cluster: {e}")
-
         return None, None, None
